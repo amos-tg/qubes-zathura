@@ -17,6 +17,7 @@
 #include "page.h"
 #include "plugin.h"
 #include "content-type.h"
+#include "qubes.h"
 
 /**
  * Document
@@ -95,8 +96,13 @@ static bool hash_file_sha256(uint8_t* dst, const char* path) {
   return true;
 }
 
-zathura_document_t* zathura_document_open(zathura_t* zathura, const char* path, const char* uri, const char* password,
-                                          zathura_error_t* error) {
+zathura_document_t* zathura_document_open(
+		zathura_t* zathura,
+		const char* path,
+		const char* uri,
+		const char* password,
+    zathura_error_t* error) 
+{
   if (zathura == NULL || path == NULL) {
     return NULL;
   }
@@ -213,6 +219,13 @@ zathura_document_t* zathura_document_open(zathura_t* zathura, const char* path, 
       document->cell_height = height;
     }
   }
+
+  // add message logic here.
+	// I think I will just add a global socket
+	// variable to make things easier on myself
+	// in this codebase.
+
+
 
   return document;
 

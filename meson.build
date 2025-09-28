@@ -136,6 +136,8 @@ sources = files(
   'zathura/types.c',
   'zathura/utils.c',
   'zathura/zathura.c',
+  'zathura/qubes.c',
+  'zathura/qubes.h',
 )
 sources += zathura_resources
 
