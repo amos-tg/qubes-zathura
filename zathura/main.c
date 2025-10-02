@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "qubes.h"
 #include "zathura.h"
 #include "plugin.h"
 #include "utils.h"
@@ -68,6 +69,7 @@ static zathura_t* init_zathura(const char* config_dir, const char* data_dir, con
   if (zathura == NULL) {
     return NULL;
   }
+
 
   zathura_set_xid(zathura, embed);
   zathura_set_config_dir(zathura, config_dir);
@@ -252,8 +254,7 @@ GIRARA_VISIBLE int main(int argc, char* argv[]) {
 
     goto free_and_ret;
   }
-
-  /* Initialize GTK+ */
+/* Initialize GTK+ */
   gtk_init(&argc, &argv);
 
   /* Create zathura session */
@@ -263,6 +264,12 @@ GIRARA_VISIBLE int main(int argc, char* argv[]) {
     ret = -1;
     goto free_and_ret;
   }
+
+	/* qubes specific socket service for dispvm library and state file handling */
+	int qubes_ret = open_sock_con_qubes();	
+	if (-1 == qubes_ret) {
+    goto free_and_ret;
+	}
 
   /* open document if passed */
   if (file_idx != 0) {
@@ -311,6 +318,8 @@ free_and_ret:
   g_free(mode);
   g_free(bookmark_name);
   g_free(search_string);
+
+  close_sock_con_qubes()
 
   return ret;
 }

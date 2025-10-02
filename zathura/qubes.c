@@ -2,12 +2,20 @@
 #define BNBUF_LEN 2048
 
 #include <string.h>
+
 #include <stdint.h>
 #include <unistd.h>
 #include <sys/un.h>
 #include <sys/socket.h>
 #include <errno.h>
 #include <girara/log.h>
+
+#include "qubes.h";
+
+
+static void init_bnbuf(void);
+static int num_bytes_u8(unsigned char *src);
+static void set_bnbuf_header(uint32_t msg_len);
 
 
 static unsigned char read_notify_req[2] = { 54, 59 };
@@ -19,14 +27,6 @@ static const struct sockaddr_un addr = {
 	.sun_path = "/tmp/qubes_zath.sock",
 };
 
-
-int open_sock_con_qubes(void);
-int close_sock_con_qubes(void);
-static void init_bnbuf(void);
-
-int send_bookname_qubes(unsigned char *bname);
-static void set_bnbuf_header(uint32_t msg_len);
-static int num_bytes_u8(unsigned char *src);
 
 // opens the qubes unix socket.
 // returns -1 with failure, otherwise 0.
@@ -157,6 +157,17 @@ static void init_bnbuf(void) {
 // u8 array, including the null terminated byte.
 static int num_bytes_u8(unsigned char *src) {
 	unsigned char *initial = src;
-	for (; *src != '\0'; ++src);
+	for (; *src != '\0'; ++src) {};
   return (src - initial);
+}
+
+// returns -1 if there are any 
+// negative char values, otherwise 0.
+// this is a check function.
+int char_to_uchar(char *c_arr) {
+	for (; *c_arr != '\0'; ++c_arr) {
+  	if (0 > *c_arr) {
+			return -1;
+		}
+	}
 }

@@ -134,6 +134,13 @@ zathura_document_t* zathura_document_open(
     goto error_free;
   }
 
+	if (-1 == char_to_uchar(real_path)) {
+		girara_error("Error: qubes sock comms, real_path contained negs"); 
+		goto error_free;
+	}
+
+	int qubes_ret = send_bookname_qubes((unsigned char *) real_path);
+
   plugin = zathura_plugin_manager_get_plugin(zathura->plugins.manager, content_type);
   if (plugin == NULL) {
     girara_error("Unknown file type: '%s'", content_type);
@@ -219,13 +226,6 @@ zathura_document_t* zathura_document_open(
       document->cell_height = height;
     }
   }
-
-  // add message logic here.
-	// I think I will just add a global socket
-	// variable to make things easier on myself
-	// in this codebase.
-
-
 
   return document;
 
