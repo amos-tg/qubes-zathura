@@ -1,5 +1,6 @@
-zathura - a document viewer
-===========================
+qubes-zathura - a document viewer : modified version of zathura 
+===============================================================
+All credit to the folks over at pwmt, the changes I have made are miniscule. 
 
 zathura is a highly customizable and functional document viewer based on the
 girara user interface library and several document libraries.
