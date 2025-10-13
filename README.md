@@ -62,4 +62,10 @@ refer to the meson documentation for platform specific dependencies.
 Bugs
 ----
 
-Please report bugs at https://github.com/pwmt/zathura.
+Please report bugs at https://github.com/pwmt/zathura 
+ONLY REPORT BUGS IF THEY ARE NOT RELATED TO THE QUBES OS CHANGES
+DO NOT BUG THE AUTHORS OF ZATHURA ABOUT CODE THEY HAVE NOT WRITTEN.
+This repository may or may not be kept up to date, if you find a 
+bug cross reference with the actual zathura code to see if it has 
+already been fixed if you wish to report said bug to someone who is 
+actually likely to fix it, ie. not me. 
