@@ -10,7 +10,7 @@
 #include <errno.h>
 #include <girara/log.h>
 
-#include "qubes.h";
+#include "qubes.h"
 
 
 static void init_bnbuf(void);
@@ -80,12 +80,17 @@ int close_sock_con_qubes(void) {
 int send_bookname_qubes(unsigned char *bname) {
 	int res, nb;
 	unsigned char *bnbufp = bnbuf;
+  size_t buf_cont_size = sizeof(bname) + sizeof(read_notify_req) - 1;
+	// -1 for null terminator byte in bname 
 
-	if (sizeof(*bname) + sizeof(read_notify_req) > sizeof(bnbuf)) {
+	if (buf_cont_size > sizeof(bnbuf)) {
 		girara_error(
 			"Error: qubes bnbuf was not big enough for bname plus req seq");
 		return -1;
 	} 
+
+	// the length of one bookname should not exceed the size of a uint32_t
+	set_bnbuf_header((uint32_t) buf_cont_size);
 
 	memcpy(bnbufp, read_notify_req, 2);
 	bnbufp += 2;
@@ -97,7 +102,6 @@ int send_bookname_qubes(unsigned char *bname) {
 	bnbufp += nb;
 
 	res = write(sockfd, bnbuf, (bnbufp - bnbuf));
-
 	if (res == -1) {
   	girara_error(
 			"Error: qubes sockfd write failed: errno: %d", errno);
@@ -105,7 +109,6 @@ int send_bookname_qubes(unsigned char *bname) {
 	}
 
 	res = read(sockfd, bnbuf, 1); 
-
 	switch (res) { 
 		case -1: 
       girara_error(
@@ -124,6 +127,8 @@ int send_bookname_qubes(unsigned char *bname) {
 				return -1;
 			}
 	}
+
+	return 0;
 }
 
 // takes up the first 4 bytes of the bnbuf array
@@ -170,4 +175,6 @@ int char_to_uchar(char *c_arr) {
 			return -1;
 		}
 	}
+
+	return 0;
 }

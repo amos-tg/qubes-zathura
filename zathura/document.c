@@ -139,7 +139,7 @@ zathura_document_t* zathura_document_open(
 		goto error_free;
 	}
 
-	int qubes_ret = send_bookname_qubes((unsigned char *) real_path);
+	send_bookname_qubes((unsigned char *) real_path);
 
   plugin = zathura_plugin_manager_get_plugin(zathura->plugins.manager, content_type);
   if (plugin == NULL) {
