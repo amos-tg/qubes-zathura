@@ -318,8 +318,7 @@ free_and_ret:
   g_free(mode);
   g_free(bookmark_name);
   g_free(search_string);
-
-  close_sock_con_qubes()
+  close_sock_con_qubes();
 
   return ret;
 }
