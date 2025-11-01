@@ -41,7 +41,7 @@ int open_sock_con_qubes(void) {
 		return -1;
 	}
 	
-	con_res = connect(sockfd, (sockaddr *)addrp, sizeof(addr));
+	con_res = connect(sockfd, (struct sockaddr *)addrp, sizeof(addr));
 	if (con_res == -1) {
 		girara_error(
 			"Error: qubes sock failed to connect: errno: %d", errno);
