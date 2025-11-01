@@ -2,14 +2,12 @@
 #define BNBUF_LEN 2048
 
 #include <string.h>
-
 #include <stdint.h>
 #include <unistd.h>
 #include <sys/un.h>
 #include <sys/socket.h>
 #include <errno.h>
 #include <girara/log.h>
-
 #include "qubes.h"
 
 
@@ -43,7 +41,7 @@ int open_sock_con_qubes(void) {
 		return -1;
 	}
 	
-	con_res = connect(sockfd, addrp, sizeof(addr));
+	con_res = connect(sockfd, (sockaddr) addrp, sizeof(addr));
 	if (con_res == -1) {
 		girara_error(
 			"Error: qubes sock failed to connect: errno: %d", errno);
