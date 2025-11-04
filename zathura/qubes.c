@@ -18,7 +18,6 @@ static void set_bnbuf_header(uint32_t msg_len);
 
 static unsigned char read_notify_req[2] = { 54, 59 };
 static unsigned char bnbuf[2048];
-
 static int sockfd;
 static const struct sockaddr_un addr = {
 	.sun_family = AF_UNIX,	
@@ -89,6 +88,7 @@ int send_bookname_qubes(unsigned char *bname) {
 
 	// the length of one bookname should not exceed the size of a uint32_t
 	set_bnbuf_header((uint32_t) buf_cont_size);
+	bnbufp += 4;
 
 	memcpy(bnbufp, read_notify_req, 2);
 	bnbufp += 2;
@@ -106,37 +106,17 @@ int send_bookname_qubes(unsigned char *bname) {
 		return -1;
 	}
 
-	res = read(sockfd, bnbuf, 1); 
-	switch (res) { 
-		case -1: 
-      girara_error(
-				"Error: qubes sockfd read error: errno: %d", errno);
-			return -1;
-		case 0:
-			girara_error(
-				"Error: qubes sockfd read returned EOF");
-			return -1;
-		case 1:
-			if (1 == bnbuf[0]) {
-				return 0;
-			} else {
-      	girara_error(
-					"Error: qubes sockfd read was not RECV_SEQ");
-				return -1;
-			}
-	}
-
 	return 0;
 }
 
 // takes up the first 4 bytes of the bnbuf array
-// with the length of the message. (we are using 
-// SOCK_STREAM so message boundaries are not 
-// preserved) 
-// Least_Significant_Bit is the rightmost bit
+// with the length of the message including the header. 
+// (we are using SOCK_STREAM so message boundaries are not 
+// preserved). Preserves native endianness.
 static void set_bnbuf_header(uint32_t msg_len) {
 	int shift_count; 
 	unsigned char *bnbufp = bnbuf;
+	msg_len += 4;
 
 	// first iter = sc = 0, 8 bits , 0     3 < HEADER_LEN_IN_BYTES
 	//              sc = 8, 16 bits , 1
